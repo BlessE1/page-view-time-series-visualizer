@@ -25,18 +25,19 @@ def draw_line_plot():
 def draw_bar_plot():
     # Copy and modify data for monthly bar plot
     df_bar = df.copy()
-    df_bar['year'] = [d.year for d in df_bar.index]
-    df_bar['month'] = [d.strftime('%b') for d in df_bar.index]
-    df_bar = df_bar.groupby(['year', 'month'], sort=False)['value'].mean().round().unstack()
+    df_bar['Years'] = [d.year for d in df_bar.index]
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    df_bar['Months'] = pd.Categorical([d.strftime('%b') for d in df_bar.index], categories=months, ordered=True)
+    df_bar = df_bar.groupby(['Years', 'Months'], sort=False)['value'].mean().round().unstack()
 
     # Draw bar plot
-    #fig, ax = plt.subplots()
-    ax = df_bar.plot.bar(figsize=(10, 10), rot=0)
+    ax = df_bar.plot.bar(figsize=(20, 10), rot=0, fontsize=20)
     fig = ax.get_figure()
 
-    ax.set_xlabel('Years')
-    ax.set_ylabel('Average Page Views')
-    ax.legend(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], title='Months')
+    ax.set_xlabel('Years', fontdict={'size': 32})
+    ax.set_ylabel('Average Page Views', fontdict={'size': 32})
+    ax.legend(title='Months', fontsize=20, title_fontsize='32')
 
     # Save image and return fig (don't change this part)
     fig.savefig('bar_plot.png')
